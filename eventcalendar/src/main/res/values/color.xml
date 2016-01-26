@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="white">#FFFFFF</color>
+    <color name="white_transparent">#FFFFFF</color>
+    <color name="black">#000000</color>
+    <color name="orange">#FF9933</color>
+    <color name="green">#41c102</color>
+    <color name="gray">#999999</color>
+    <color name="gray_transparent">#9F3b3b3b</color>
+    <color name="light_gray_transparent">#9FD8D8D8</color>
+    <color name="badge_gray">#848484</color>
+    <color name="blue">#0066cc</color>
+    <!-- <color name="metallic_silver">#BCC6CC</color> -->
+    <color name="dark_gray">#3b3b3b</color>
+    <color name="light_gray">#D8D8D8</color>
+    <!-- <color name="divider_gray">#C3C3C3</color> -->
+    <color name="red">#FF0000</color>
+    <color name="red_tran">#10FF0000</color>
+    <color name="yellow">#faf037</color>
+    <color name="dark_yellow">#c5a522</color>
+    <color name="actionbar_bg">#354875</color>
+
+    <color name="calendar_event_background">#E7F7FC</color>
+    <color name="calendar_event_add_background">#7EB8E1</color>
+    <color name="calendar_event_vertical_divider">#03A1DE</color>
+    <color name="calendar_all_day_event_vertical_divider">#F68713</color>
+</resources>

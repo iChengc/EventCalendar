@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+   Copyright (C) 2013 Lucas Rocha
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+-->
+
+<resources>
+    <declare-styleable name="OSCalendarView">
+        <attr name="dateTextSize" format="dimension" />
+        <attr name="todayBackgroundColor" format="color" />
+        <attr name="selectedDayBackgroundColor" format="color" />
+        <attr name="focusedMonthDateColor" format="color"/>
+        <attr name="unfocusedMonthDateColor" format="color"/>
+        <attr name="eventFlagColor" format="color"/>
+        <attr name="maxDate" format="string"/>
+        <attr name="minDate" format="string"/>
+        <attr name="calendarMode">
+            <enum name="month" value="0" />
+            <enum name="week" value="1" />
+        </attr>
+    </declare-styleable>
+
+    <declare-styleable name="OSEventTimeLineView">
+        <attr name="timeLineTitleSize" format="dimension" />
+        <attr name="timeLineTitleColor" format="color" />
+        <attr name="timeLineCommentSize" format="dimension" />
+        <attr name="timeLineCommentColor" format="color" />
+        <attr name="timeLineTimeLabelColor" format="color" />
+        <attr name="timeLineTimeLabelSize" format="dimension" />
+        <attr name="timeLineDividerColor" format="color" />
+        <attr name="timeLineDividerHeight" format="color" />
+        <attr name="timeLineEventBackground" format="color" />
+        <attr name="timeLineAddBackground" format="color" />
+        <attr name="timeLineVerticalDividerColor" format="color" />
+        <attr name="timeLineVerticalDividerWidth" format="dimension" />
+        <attr name="timeLineActiveBackgroundColor" format="color" />
+        <attr name="timeLineInactiveBackgroundColor" format="color" />
+    </declare-styleable>
+</resources>

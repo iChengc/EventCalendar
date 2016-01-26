@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">EventCalendar</string>
+    <string name="reservation_all_day_label">All Day</string>
+</resources>
