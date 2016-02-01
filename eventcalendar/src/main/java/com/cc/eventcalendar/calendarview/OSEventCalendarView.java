@@ -247,11 +247,6 @@ public class OSEventCalendarView extends OSCalendarView implements OSEventTimeLi
     }
 
     private class ViewPagerAdapter extends RecyclePagerAdapter {
-
-        public void changeViewMode() {
-            clearCache();
-        }
-
         @Override
         protected View getItemView(int position) {
 

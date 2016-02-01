@@ -167,7 +167,7 @@ public class EventsAdapter extends AbsOSEventAdapter {
             return;
         }
 
-        mEvents = events;
+        mEvents = events.clone();
         notifyDataSetChanged();
     }
 
