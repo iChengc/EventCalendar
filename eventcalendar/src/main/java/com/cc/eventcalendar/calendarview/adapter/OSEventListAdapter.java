@@ -8,8 +8,8 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 
-import com.cc.eventcalendar.R;
 import com.cc.eventcalendar.calendarview.ICalendarEvent;
+import com.cc.eventcalendar.calendarview.R;
 import com.cc.eventcalendar.calendarview.util.OSTimeUtil;
 
 import java.util.Calendar;

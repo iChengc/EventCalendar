@@ -24,7 +24,6 @@ import android.view.animation.Animation;
 import android.view.animation.Transformation;
 
 
-import com.cc.eventcalendar.R;
 import com.cc.eventcalendar.calendarview.adapter.DayEventAdapter;
 import com.cc.eventcalendar.calendarview.adapter.OSEventAdapter;
 import com.cc.eventcalendar.calendarview.util.DeviceUtils;

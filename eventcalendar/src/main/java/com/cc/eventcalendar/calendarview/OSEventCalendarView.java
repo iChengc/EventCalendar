@@ -34,7 +34,7 @@ public class OSEventCalendarView extends OSCalendarView implements OSEventTimeLi
 
     private ViewPager mEventListViewPager;
     private ViewPagerAdapter mEventListViewPagerAdapter;
-    private SwipeRefreshLayout mSwipRefreshLayout;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
     private View mFocusEventListView;
 
     private EventsAdapter mEventAdapter;
@@ -101,15 +101,15 @@ public class OSEventCalendarView extends OSCalendarView implements OSEventTimeLi
     private void init() {
         mEventViewMode = EVENT_VIEW_MODE_LIST;
         LayoutParams lp = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-        mSwipRefreshLayout = new VerticalSwipeRefreshLayout(getContext());
-        mSwipRefreshLayout.setLayoutParams(lp);
-        mSwipRefreshLayout.setOnRefreshListener(this);
+        mSwipeRefreshLayout = new VerticalSwipeRefreshLayout(getContext());
+        mSwipeRefreshLayout.setLayoutParams(lp);
+        mSwipeRefreshLayout.setOnRefreshListener(this);
 
         mEventListViewPager = new ViewPager(getContext());
         lp = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         mEventListViewPager.setLayoutParams(lp);
-        mSwipRefreshLayout.addView(mEventListViewPager);
-        mContentView.addView(mSwipRefreshLayout);
+        mSwipeRefreshLayout.addView(mEventListViewPager);
+        mContentView.addView(mSwipeRefreshLayout);
 
         mEventListViewPagerAdapter = new ViewPagerAdapter();
         mEventListViewPager.setAdapter(mEventListViewPagerAdapter);
@@ -230,7 +230,11 @@ public class OSEventCalendarView extends OSCalendarView implements OSEventTimeLi
     public void setEventViewMode(int eventViewMode) {
         if (mEventViewMode != eventViewMode) {
             this.mEventViewMode = eventViewMode;
-            mEventListViewPagerAdapter.changeViewMode();
+            mFocusEventListView = null;
+            final int currentItem = mEventListViewPager.getCurrentItem();
+            mEventListViewPagerAdapter = new ViewPagerAdapter();
+            mEventListViewPager.setAdapter(mEventListViewPagerAdapter);
+            mEventListViewPager.setCurrentItem(currentItem);
         }
     }
 
@@ -327,7 +331,7 @@ public class OSEventCalendarView extends OSCalendarView implements OSEventTimeLi
     @Override
     public void onRefresh() {
         if (mOnRefreshEventOfDayListener != null) {
-            mOnRefreshEventOfDayListener.onRefreshEventOfDay(mSwipRefreshLayout, getSelectedDateTime());
+            mOnRefreshEventOfDayListener.onRefreshEventOfDay(mSwipeRefreshLayout, getSelectedDateTime());
         } else {
             setRefreshing(false);
         }
@@ -340,7 +344,7 @@ public class OSEventCalendarView extends OSCalendarView implements OSEventTimeLi
      * @param refreshing Whether or not the view should show refresh progress.
      */
     public void setRefreshing(boolean refreshing) {
-        mSwipRefreshLayout.setRefreshing(false);
+        mSwipeRefreshLayout.setRefreshing(false);
     }
 
     private class VerticalSwipeRefreshLayout extends SwipeRefreshLayout {

@@ -14,6 +14,8 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
+import com.cc.eventcalendar.calendarview.util.OSTimeUtil;
+
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -21,6 +23,7 @@ import java.util.Date;
 
 public class EditActivity extends AppCompatActivity {
     public static final String ITEM_INTENT_KEY = "com.cc.chengcn.exame.ITEM_INTENT_KEY";
+    public static final String ITEM_TIME_INTENT_KEY = "com.cc.chengcn.exame.ITEM_TIME_INTENT_KEY";
     private EditText mTitleEdit;
     private EditText mCommentEdit;
     private TextView mStartTimeEdit;
@@ -28,8 +31,11 @@ public class EditActivity extends AppCompatActivity {
     private TextView mCreatorEdit;
     private Switch mIsAllSwitch;
 
-    private Item mItem;
+    private Event mItem;
     private Calendar mCalendar;
+
+    private long mStartTime;
+    private boolean mIsEdit = false;
 
     private boolean mIsTimeShow = false;
     @Override
@@ -38,8 +44,14 @@ public class EditActivity extends AppCompatActivity {
         setContentView(R.layout.activity_edit);
         mItem = getIntent().getParcelableExtra(ITEM_INTENT_KEY);
         if (mItem == null) {
-            finish();
-            return;
+            mItem = new Event();
+            mItem.setID(System.currentTimeMillis() + "");
+            mStartTime = getIntent().getLongExtra(ITEM_TIME_INTENT_KEY, System.currentTimeMillis());
+            mItem.setStartTime(mStartTime);
+            mItem.setEndTime(mStartTime + OSTimeUtil.MILLIS_IN_HOUR);
+            mIsEdit = false;
+        } else {
+            mIsEdit = true;
         }
         mCalendar = Calendar.getInstance();
         initView();
@@ -109,7 +121,7 @@ public class EditActivity extends AppCompatActivity {
     private void finishEdit() {
         Intent data = new Intent();
         data.putExtra(ITEM_INTENT_KEY, mItem);
-        setResult(RESULT_OK, data);
+        setResult(mIsEdit ? 1 : 0, data);
         finish();
     }
 

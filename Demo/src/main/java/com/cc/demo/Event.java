@@ -6,12 +6,10 @@ import android.os.Parcelable;
 import com.cc.eventcalendar.calendarview.adapter.BaseEvent;
 import com.cc.eventcalendar.calendarview.util.OSTimeUtil;
 
-import java.util.Calendar;
-
 /**
  * Created by ChengCn on 12/28/2015.
  */
-public class Item extends BaseEvent implements Parcelable {
+public class Event extends BaseEvent implements Parcelable {
     private String mId;
     private String mTitle;
     private String mCreator;
@@ -74,11 +72,11 @@ public class Item extends BaseEvent implements Parcelable {
         this.mIsAllDay = mIsAllDay;
     }
 
-    public static final Creator<Item> CREATOR = new Creator<Item>() {
+    public static final Creator<Event> CREATOR = new Creator<Event>() {
 
         @Override
-        public Item createFromParcel(Parcel source) {
-            Item item = new Item();
+        public Event createFromParcel(Parcel source) {
+            Event item = new Event();
             item.mId = source.readString();
             item.mComment = source.readString();
             item.mTitle = source.readString();
@@ -90,8 +88,8 @@ public class Item extends BaseEvent implements Parcelable {
         }
 
         @Override
-        public Item[] newArray(int size) {
-            return new Item[size];
+        public Event[] newArray(int size) {
+            return new Event[size];
         }
     };
     @Override
