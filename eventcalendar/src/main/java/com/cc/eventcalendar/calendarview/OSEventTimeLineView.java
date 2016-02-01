@@ -222,8 +222,8 @@ public class OSEventTimeLineView extends View implements GestureDetector.OnGestu
         mDividerColor = a.getColor(R.styleable.OSEventTimeLineView_timeLineDividerColor, getResources().getColor(R.color.light_gray));
         mDividerHeight = a.getDimensionPixelSize(R.styleable.OSEventTimeLineView_timeLineDividerHeight, 1);
         mEventTitleSize = a.getDimensionPixelSize(R.styleable.OSEventTimeLineView_timeLineTitleSize, DeviceUtils.dip2px(c, 14));
-        mEventTitleColor = a.getDimensionPixelSize(R.styleable.OSEventTimeLineView_timeLineTitleColor, getResources().getColor(R.color.actionbar_bg));
-        mEventCommentColor = a.getColor(R.styleable.OSEventTimeLineView_timeLineCommentColor, getResources().getColor(R.color.actionbar_bg));
+        mEventTitleColor = a.getDimensionPixelSize(R.styleable.OSEventTimeLineView_timeLineTitleColor, getResources().getColor(R.color.add_day_text_color));
+        mEventCommentColor = a.getColor(R.styleable.OSEventTimeLineView_timeLineCommentColor, getResources().getColor(R.color.add_day_text_color));
         mEventCommentSize = a.getDimensionPixelSize(R.styleable.OSEventTimeLineView_timeLineCommentSize, DeviceUtils.dip2px(c, 12));
         mTimeLabelTextColor = a.getColor(R.styleable.OSEventTimeLineView_timeLineTimeLabelColor, getResources().getColor(R.color.gray));
         mTimeLabelTextSize = a.getDimensionPixelSize(R.styleable.OSEventTimeLineView_timeLineTimeLabelSize, DeviceUtils.dip2px(c, 14));
@@ -845,7 +845,8 @@ public class OSEventTimeLineView extends View implements GestureDetector.OnGestu
             mRect.right = OSEventTimeLineView.this.getMeasuredWidth() - mHorizontalPadding;
             mRect.top = (int) ((OSEventTimeLineView.this.mHeight - mYStartPosition) * ((float) (mEvent.getStartTime() - mCalendarDay.getTimeInMillis())) / OSTimeUtil.MILLIS_IN_DAY) + mDividerHeight + mYStartPosition;
             mRect.bottom = (int) ((OSEventTimeLineView.this.mHeight - mYStartPosition) * ((float) (mEvent.getEndTime() - mCalendarDay.getTimeInMillis())) / OSTimeUtil.MILLIS_IN_DAY) + mYStartPosition;
-
+            mRect.top = mRect.top < 0 ? 0 : mRect.top;
+            mRect.bottom = mRect.bottom > mHeight ? mHeight : mRect.bottom;
             if (mRect.height() < mMinEventItemHeight) {
                 mRect.bottom = mRect.top + mMinEventItemHeight;
             }

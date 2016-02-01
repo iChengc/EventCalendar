@@ -19,7 +19,7 @@
     <color name="red_tran">#10FF0000</color>
     <color name="yellow">#faf037</color>
     <color name="dark_yellow">#c5a522</color>
-    <color name="actionbar_bg">#354875</color>
+    <color name="add_day_text_color">#354875</color>
 
     <color name="calendar_event_background">#E7F7FC</color>
     <color name="calendar_event_add_background">#7EB8E1</color>

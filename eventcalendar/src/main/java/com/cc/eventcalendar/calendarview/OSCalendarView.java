@@ -267,7 +267,7 @@ public class OSCalendarView extends FrameLayout {
     private void initView() {
         LayoutInflater layoutInflater = (LayoutInflater) getContext()
                 .getSystemService(Service.LAYOUT_INFLATER_SERVICE);
-        View content = layoutInflater.inflate(R.layout.layout_calendar_view, null, false);
+        View content = layoutInflater.inflate(R.layout.eventcalendarview_layout_calendar_view, null, false);
 
         mDayNamesHeader = (ViewGroup) content.findViewById(R.id.calendar_vew_day_names);
         mMonthName = (TextView) content.findViewById(R.id.calendar_vew_month_name);

@@ -221,13 +221,16 @@ public class EventsAdapter extends AbsOSEventAdapter {
 
         List<BaseEvent> tmp;
         mTempDate.setTimeInMillis(event.getStartTime());
-        OSTimeUtil.changeToStartOfDay(mTempDate);
-        tmp = (List<BaseEvent>) mEvents.get(getKey(mTempDate.getTimeInMillis()));
-        if (tmp == null) {
-            tmp = new ArrayList<>();
+        while (mTempDate.getTimeInMillis() < event.getEndTime()) {
+            OSTimeUtil.changeToStartOfDay(mTempDate);
+            tmp = (List<BaseEvent>) mEvents.get(getKey(mTempDate.getTimeInMillis()));
+            if (tmp == null) {
+                tmp = new ArrayList<>();
+            }
+            tmp.add((BaseEvent) event);
+            mEvents.put(getKey(mTempDate.getTimeInMillis()), tmp);
+            mTempDate.add(Calendar.DAY_OF_MONTH, 1);
         }
-        tmp.add((BaseEvent) event);
-        mEvents.put(getKey(mTempDate.getTimeInMillis()), tmp);
     }
 
     /**

@@ -82,7 +82,7 @@ public class OSEventListAdapter extends BaseAdapter {
     }
 
     protected ViewHolder createEventItemView(int position, ViewGroup parent) {
-        View view =mLayoutInflater.inflate(R.layout.layout_reservation_item, parent, false);
+        View view =mLayoutInflater.inflate(R.layout.eventcalendarview_layout_reservation_item, parent, false);
         ViewHolder vh = new ViewHolder(view);
         return vh;
     }
@@ -112,26 +112,19 @@ public class OSEventListAdapter extends BaseAdapter {
     }
 
     static class ViewHolder {
-        View _itemView;
-        TextView _titleView;
-        TextView _creatorView;
-        TextView _commentView;
-        View _divider;
-        TextView _startTimeView;
-        TextView _endTimeView;
-        TextView _allDayView;
-        View _startEndTimeViewContainer;
+        View _itemView, _divider, _startEndTimeViewContainer;
+        TextView _titleView, _creatorView, _commentView, _startTimeView, _endTimeView, _allDayView;
 
         public ViewHolder(View itemView) {
             _itemView = itemView;
-            _titleView = (TextView) itemView.findViewById(R.id.item_title);
-            _creatorView = (TextView) itemView.findViewById(R.id.item_creator);
-            _commentView = (TextView) itemView.findViewById(R.id.item_comment);
-            _divider = itemView.findViewById(R.id.item_divider);
-            _startEndTimeViewContainer = itemView.findViewById(R.id.item_start_end_time);
-            _startTimeView = (TextView) itemView.findViewById(R.id.item_startTime_label);
-            _endTimeView = (TextView) itemView.findViewById(R.id.item_endTime_label);
-            _allDayView = (TextView) itemView.findViewById(R.id.item_allDay_label);
+            _titleView = (TextView) itemView.findViewById(R.id.event_title);
+            _creatorView = (TextView) itemView.findViewById(R.id.event_creator);
+            _commentView = (TextView) itemView.findViewById(R.id.event_comment);
+            _divider = itemView.findViewById(R.id.event_divider);
+            _startEndTimeViewContainer = itemView.findViewById(R.id.event_start_end_time);
+            _startTimeView = (TextView) itemView.findViewById(R.id.event_startTime_label);
+            _endTimeView = (TextView) itemView.findViewById(R.id.event_endTime_label);
+            _allDayView = (TextView) itemView.findViewById(R.id.event_allDay_label);
 
         }
     }

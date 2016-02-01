@@ -5,53 +5,53 @@
     android:orientation="horizontal">
 
     <FrameLayout
-        android:id="@+id/reservation_item_time_container"
+        android:id="@+id/event_time_container"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="1">
 
         <RelativeLayout
-            android:id="@+id/reservation_item_start_end_time"
+            android:id="@+id/event_start_end_time"
             android:layout_gravity="center"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
             <TextView
-                android:id="@+id/reservation_item_startTime_label"
+                android:id="@+id/event_startTime_label"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:textColor="@color/actionbar_bg"
+                android:textColor="@color/add_day_text_color"
                 android:textSize="12sp"
-                android:text="All day" />
+                android:text="@string/reservation_all_day_label" />
 
             <TextView
-                android:id="@+id/reservation_item_endTime_label"
+                android:id="@+id/event_endTime_label"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/item_startTime_label"
+                android:layout_below="@+id/event_startTime_label"
                 android:layout_marginTop="5dp"
                 android:gravity="center"
                 android:textColor="@color/black"
-                android:text="All Day"
+                android:text="@string/reservation_all_day_label"
                 android:textSize="12sp" />
         </RelativeLayout>
 
         <TextView
-            android:id="@+id/reservation_item_allDay_label"
+            android:id="@+id/event_allDay_label"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center"
-            android:text="All day"
-            android:textColor="@color/actionbar_bg"
+            android:text="@string/reservation_all_day_label"
+            android:textColor="@color/add_day_text_color"
             android:textSize="12sp" />
     </FrameLayout>
 
     <View
-        android:id="@+id/reservation_item_divider"
+        android:id="@+id/event_divider"
         android:layout_width="2dp"
         android:layout_height="match_parent"
-        android:background="@color/actionbar_bg" />
+        android:background="@color/add_day_text_color" />
 
     <RelativeLayout
         android:layout_width="0dp"
@@ -60,14 +60,14 @@
         android:padding="8dp">
 
         <TextView
-            android:id="@+id/reservation_item_title"
+            android:id="@+id/event_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/actionbar_bg"
+            android:textColor="@color/add_day_text_color"
             android:textSize="12sp" />
 
         <TextView
-            android:id="@+id/reservation_item_creator"
+            android:id="@+id/event_creator"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
@@ -75,12 +75,12 @@
             android:textSize="10sp" />
 
         <TextView
-            android:id="@+id/reservation_item_comment"
+            android:id="@+id/event_comment"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/item_title"
+            android:layout_below="@+id/event_title"
             android:paddingTop="5dp"
-            android:textColor="@color/actionbar_bg"
+            android:textColor="@color/add_day_text_color"
             android:singleLine="true"
             android:textSize="10sp" />
     </RelativeLayout>
