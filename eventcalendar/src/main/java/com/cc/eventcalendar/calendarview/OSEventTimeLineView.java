@@ -23,7 +23,6 @@ import android.view.ViewTreeObserver;
 import android.view.animation.Animation;
 import android.view.animation.Transformation;
 
-
 import com.cc.eventcalendar.calendarview.adapter.DayEventAdapter;
 import com.cc.eventcalendar.calendarview.adapter.OSEventAdapter;
 import com.cc.eventcalendar.calendarview.util.DeviceUtils;
@@ -46,6 +45,11 @@ public class OSEventTimeLineView extends View implements GestureDetector.OnGestu
      * Min zoom factor.
      */
     private static final float MIN_ZOOM_FACTOR = 0.7f;
+
+    /**
+     * The min text size.
+     */
+    private static final int MIN_TEXT_SIZE = 5;
 
     /**
      * The height of the time line view
@@ -102,6 +106,7 @@ public class OSEventTimeLineView extends View implements GestureDetector.OnGestu
      * The minimum content padding;
      */
     private int mMinContentPadding;
+
     /**
      * The horizontal padding.
      */
@@ -143,6 +148,7 @@ public class OSEventTimeLineView extends View implements GestureDetector.OnGestu
      * The minimum event item height, default is the 10 minute height.
      */
     private int mMinEventItemHeight;
+    private int mMinEventItemHeightTimeDuration;
 
     /**
      * The center of the pinch gesture.
@@ -238,6 +244,7 @@ public class OSEventTimeLineView extends View implements GestureDetector.OnGestu
         mZoomItemHeight = mItemHeight;
         // Default minimum event item height is 10 minute height
         mMinEventItemHeight = mZoomItemHeight / 6;
+        mMinEventItemHeightTimeDuration = 600000;
         mDetector = new GestureDetector(c, this);
         mRect = new Rect();
         //mEvents = new ArrayList<>();
@@ -778,6 +785,10 @@ public class OSEventTimeLineView extends View implements GestureDetector.OnGestu
             ICalendarEvent event = mEventAdapter.getEvent(i);
             if (event.isHappensOn(time)) {
                 return event;
+            } else if (event.getDuration() < mMinEventItemHeightTimeDuration) {
+                if (event.getStartTime() >= time - mMinEventItemHeightTimeDuration && event.getStartTime() <= time + mMinEventItemHeightTimeDuration) {
+                    return event;
+                }
             }
         }
         return null;
@@ -883,7 +894,9 @@ public class OSEventTimeLineView extends View implements GestureDetector.OnGestu
                 mTextPaint.setColor(mEventTitleColor);
                 mTextPaint.setTextSize(mEventTitleSize);
                 contentX = mRect.left + mEventContentPadding;
-                if (mRect.height() < mTextPaint.getTextSize() + (mMinContentPadding << 1)) {
+                if (mRect.height() - (mMinContentPadding << 1) < MIN_TEXT_SIZE) {
+                    return;
+                } else if (mRect.height() < mTextPaint.getTextSize() + (mMinContentPadding << 1)) {
                     contentY = mRect.bottom - mMinContentPadding;
                     mTextPaint.setTextSize(mRect.height() - (mMinContentPadding << 1));
                     drawTitleAndCreator(canvas, titleCreatorDividerPos, contentX, contentY);
@@ -892,9 +905,7 @@ public class OSEventTimeLineView extends View implements GestureDetector.OnGestu
                     contentY = mRect.bottom - (((int) (mRect.height() - mTextPaint.getTextSize())) >> 1);
                     drawTitleAndCreator(canvas, titleCreatorDividerPos, contentX, contentY);
                     return;
-                }
-
-                if (mRect.height() >= mTextPaint.getTextSize() + (mEventContentPadding << 1)) {
+                } else {
                     contentY = mRect.top + mEventContentPadding + mTextPaint.getTextSize();
                     drawTitleAndCreator(canvas, titleCreatorDividerPos, contentX, contentY);
                 }

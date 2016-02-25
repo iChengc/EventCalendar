@@ -44,7 +44,7 @@ public abstract class BaseEvent implements ICalendarEvent, Parcelable {
 
     @Override
     public boolean isHappensOnWithoutEdge(long time) {
-        return time > mStartTime && time < mEndTime;
+        return time >= mStartTime && time < mEndTime;
     }
 
     @Override
