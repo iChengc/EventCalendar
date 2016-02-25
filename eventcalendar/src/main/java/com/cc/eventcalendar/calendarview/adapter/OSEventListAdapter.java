@@ -105,8 +105,10 @@ public class OSEventListAdapter extends BaseAdapter {
         } else {
             vh._startEndTimeViewContainer.setVisibility(View.VISIBLE);
             vh._allDayView.setVisibility(View.GONE);
-            vh._startTimeView.setText(OSTimeUtil.formatLocaleDateTime("hhmma", event.getStartTime()));
-            vh._endTimeView.setText(OSTimeUtil.formatLocaleDateTime("hhmma", event.getEndTime()));
+            vh._startTimeView.setText(OSTimeUtil.formatLocaleDateTime("HHmma", event.getStartTime() < mDayEventAdapter.getDay().getTimeInMillis() ?
+                    mDayEventAdapter.getDay().getTimeInMillis() : event.getStartTime()));
+            vh._endTimeView.setText(OSTimeUtil.formatLocaleDateTime("HHmma", event.getEndTime() > mDayEventAdapter.getDay().getTimeInMillis() + OSTimeUtil.MILLIS_IN_DAY ?
+                    mDayEventAdapter.getDay().getTimeInMillis() + OSTimeUtil.MILLIS_IN_DAY : event.getEndTime()));
             vh._divider.setBackgroundColor(mNormalDividerColor);
         }
     }

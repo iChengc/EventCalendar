@@ -167,8 +167,16 @@ public class EventsAdapter extends AbsOSEventAdapter {
             return;
         }
 
-        mEvents = events.clone();
+        createEventsData(events);
         notifyDataSetChanged();
+    }
+
+    private void createEventsData(SparseArray<Collection<? extends BaseEvent>> events) {
+        for (int i = 0; i < events.size(); i++) {
+            final int key = events.keyAt(i);
+            List<? extends BaseEvent> eventsOfDay = new ArrayList<>(events.get(key));
+            mEvents.put(key, eventsOfDay);
+        }
     }
 
     /**

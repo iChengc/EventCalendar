@@ -339,7 +339,7 @@ public class OSEventCalendarView extends OSCalendarView implements OSEventTimeLi
      * @param refreshing Whether or not the view should show refresh progress.
      */
     public void setRefreshing(boolean refreshing) {
-        mSwipeRefreshLayout.setRefreshing(false);
+        mSwipeRefreshLayout.setRefreshing(refreshing);
     }
 
     private class VerticalSwipeRefreshLayout extends SwipeRefreshLayout {

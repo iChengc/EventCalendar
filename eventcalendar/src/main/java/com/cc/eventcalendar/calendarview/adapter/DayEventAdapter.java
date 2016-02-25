@@ -1,7 +1,9 @@
 package com.cc.eventcalendar.calendarview.adapter;
 
 import com.cc.eventcalendar.calendarview.ICalendarEvent;
+import com.cc.eventcalendar.calendarview.util.OSTimeUtil;
 
+import java.sql.DatabaseMetaData;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -16,6 +18,7 @@ public class DayEventAdapter extends AbsOSEventAdapter {
 
     public DayEventAdapter() {
         mDayOfEvent = Calendar.getInstance();
+        OSTimeUtil.changeToStartOfDay(mDayOfEvent);
         mAllDayEvent = new ArrayList<>();
         mEvents = new ArrayList<>();
     }
@@ -41,6 +44,7 @@ public class DayEventAdapter extends AbsOSEventAdapter {
 
         if (dayOfEvent != null) {
             mDayOfEvent.setTimeInMillis(dayOfEvent.getTimeInMillis());
+            OSTimeUtil.changeToStartOfDay(mDayOfEvent);
         }
 
         notifyDataSetChanged();
