@@ -4,6 +4,7 @@ import android.util.SparseArray;
 
 import com.cc.eventcalendar.calendarview.ICalendarEvent;
 import com.cc.eventcalendar.calendarview.util.OSTimeUtil;
+import com.cc.eventcalendar.calendarview.util.StrUtil;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -63,69 +64,171 @@ public class EventsAdapter extends AbsOSEventAdapter {
      * @param dateTime the time in millisecond of the day.
      */
     public void updateOneDayEvents(List<? extends BaseEvent> events, long dateTime) {
-        List<? extends BaseEvent> updated = null;
+        List<BaseEvent> updated = new ArrayList<>();
         if (events != null) {
-            updated = new ArrayList<>(events);
+            updated.addAll(events);
         }
+
+        updateCrossDayEvent(updated);
+        List<BaseEvent> oneDayOldReservations = (List<BaseEvent>) mEvents.get(getKey(dateTime));
         mEvents.put(getKey(dateTime), updated);
+        if (oneDayOldReservations == null || oneDayOldReservations.isEmpty()) {
+            notifyDataSetChanged();
+            return;
+        }
+        for (int i = oneDayOldReservations.size() - 1; i >= 0; i--) {
+            for (int j = 0; j < updated.size(); j++) {
+                if (oneDayOldReservations.get(i).getID().equals(updated.get(j).getID())) {
+                    oneDayOldReservations.remove(i);
+                    break;
+                }
+            }
+        }
+
+        if (!oneDayOldReservations.isEmpty()) {
+            deleteCrossDayEvent(oneDayOldReservations);
+        }
         notifyDataSetChanged();
     }
 
-    public synchronized void updateEvent(ICalendarEvent event) {
-        for (int i = 0; i < mEvents.size(); i++) {
-            List<BaseEvent> events = (List<BaseEvent>) mEvents.get(mEvents.keyAt(i));
-            if (events == null || events.isEmpty()) {
-                continue;
+
+    private void updateCrossDayEvent(List<? extends BaseEvent> events) {
+        if (events == null || events.isEmpty()) {
+            return;
+        }
+
+        ICalendarEvent old;
+        for (ICalendarEvent ev : events) {
+            if (ev.getDuration() >= OSTimeUtil.MILLIS_IN_DAY) {
+                old = getEventById(ev.getID());
+                if (old != null) {
+                    deleteEventInternal(old);
+                }
+                addEventToList(ev);
             }
+        }
+    }
 
-            for (int j = 0;j < events.size(); j++) {
-                if (events.get(j).getID().equalsIgnoreCase(event.getID())) {
-                    BaseEvent tmp =  events.remove(j);
-                    Calendar c= Calendar.getInstance();
-                    c.setTimeInMillis(tmp.getStartTime());
-                    mTempDate.setTimeInMillis(event.getStartTime());
-                    if (OSTimeUtil.isSameDay(c, mTempDate)) {
-                        events.add(j, (BaseEvent) event);
-                    } else {
-                        List<BaseEvent> oneDayEvents = getEventsOfEventDay(event);
-                        if (oneDayEvents == null) {
-                            oneDayEvents = new ArrayList<>();
-                        }
+    private void deleteCrossDayEvent(List<? extends BaseEvent> events) {
+        if (events == null) {
+            return;
+        }
 
-                        oneDayEvents.add((BaseEvent) event);
-                        mEvents.put(getKey(event.getStartTime()), oneDayEvents);
-                    }
-                    notifyDataSetChanged();
-                    return;
+        ICalendarEvent tmp;
+        for (ICalendarEvent ev : events) {
+            if (ev.getDuration() >= OSTimeUtil.MILLIS_IN_DAY) {
+                tmp = getEventById(ev.getID());
+                if (tmp != null) {
+                    deleteEventInternal(tmp);
                 }
             }
         }
     }
 
-    public void deleteEvent(ICalendarEvent event) {
-        List<BaseEvent> events = getEventsOfEventDay(event);
-        if (events == null || events.isEmpty()) {
+    /**
+     * update one calendar event.
+     *
+     * @param event the event that will be updated.
+     */
+    public synchronized void updateEvent(ICalendarEvent event) {
+        if (event == null) {
             return;
         }
 
-        for (int i = 0; i < events.size(); i++) {
-            if (events.get(i).getID().equalsIgnoreCase(event.getID())) {
-                events.remove(i);
+        for (int i = 0; i < mEvents.size(); i++) {
+            List<BaseEvent> events = (List<BaseEvent>) mEvents.get(mEvents.keyAt(i));
+            ICalendarEvent ev = getEventFromListById(events, event.getID());
+            if (ev != null) {
+                deleteEventInternal(ev);
+                addEventToList(event);
                 notifyDataSetChanged();
                 return;
             }
         }
     }
 
-    private List<BaseEvent> getEventsOfEventDay(ICalendarEvent event) {
-        if (event == null || mEvents.size() <= 0) {
+    /**
+     * Delete one event.
+     *
+     * @param event the event that will be deleted.
+     * @return true if the event is deleted, otherwise false.
+     */
+    public boolean deleteEvent(ICalendarEvent event) {
+        if (event == null) {
+            return false;
+        }
+
+        ICalendarEvent ev = getEventById(event.getID());
+        boolean isDeleted = deleteEventInternal(ev);
+        if (isDeleted) {
+            notifyDataSetChanged();
+        }
+
+        return isDeleted;
+    }
+
+    private boolean deleteEventInternal(ICalendarEvent event) {
+        if (event == null) {
+            return false;
+        }
+
+        boolean isDeleted = false;
+        long eventTime = event.getStartTime();
+        mTempDate.setTimeInMillis(eventTime);
+        OSTimeUtil.changeToStartOfDay(mTempDate);
+        eventTime = mTempDate.getTimeInMillis();
+        while (event.getEndTime() > eventTime) {
+            List<BaseEvent> events = (List<BaseEvent>) mEvents.get(getKey(eventTime));
+            if (events == null || events.isEmpty()) {
+                eventTime += OSTimeUtil.MILLIS_IN_DAY;
+                continue;
+            }
+
+            for (int i = 0; i < events.size(); i++) {
+                if (events.get(i).getID().equalsIgnoreCase(event.getID())) {
+                    events.remove(i);
+                    isDeleted = true;
+                    break;
+                }
+            }
+
+            eventTime += OSTimeUtil.MILLIS_IN_DAY;
+        }
+        return isDeleted;
+    }
+
+    private ICalendarEvent getEventFromListById(List<BaseEvent> reservations, String id) {
+        if (reservations == null || StrUtil.isEmpty(id)) {
             return null;
         }
 
-        mTempDate.setTimeInMillis(event.getStartTime());
-        OSTimeUtil.changeToStartOfDay(mTempDate);
-        long startTime = mTempDate.getTimeInMillis();
-        return (List<BaseEvent>) mEvents.get(getKey(startTime));
+        for (ICalendarEvent reservation : reservations) {
+            if (reservation.getID().equals(id)) {
+                return reservation;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Get a calendar event by id.
+     *
+     * @param id the id of the calendar event.
+     * @return the corresponding calendar event.
+     */
+    public ICalendarEvent getEventById(String id) {
+        if (StrUtil.isEmpty(id)) {
+            return null;
+        }
+
+        for (int i = 0; i < mEvents.size(); i++) {
+            ICalendarEvent event = getEventFromListById((List<BaseEvent>) mEvents.get(mEvents.keyAt(i)), id);
+            if (event != null) {
+                return event;
+            }
+        }
+
+        return null;
     }
 
     /**
@@ -229,8 +332,8 @@ public class EventsAdapter extends AbsOSEventAdapter {
 
         List<BaseEvent> tmp;
         mTempDate.setTimeInMillis(event.getStartTime());
+        OSTimeUtil.changeToStartOfDay(mTempDate);
         while (mTempDate.getTimeInMillis() < event.getEndTime()) {
-            OSTimeUtil.changeToStartOfDay(mTempDate);
             tmp = (List<BaseEvent>) mEvents.get(getKey(mTempDate.getTimeInMillis()));
             if (tmp == null) {
                 tmp = new ArrayList<>();
