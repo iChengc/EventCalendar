@@ -11,6 +11,7 @@ import android.os.Parcelable;
 import android.support.v4.view.ViewPager;
 import android.text.format.DateUtils;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -162,7 +163,7 @@ public class OSCalendarView extends FrameLayout {
     /**
      * Use to cache the scrolling distance.
      */
-    private int mScrollingDistance;
+    private float mScrollingDistance;
 
     protected GestureDetector mGestureDetector;
 
@@ -330,7 +331,7 @@ public class OSCalendarView extends FrameLayout {
     private void setUpViewPager() {
         mWeekAdapter = new WeeksAdapter();
         mWeekViewPager.setAdapter(mWeekAdapter);
-        mWeekViewPager.setCurrentItem(mWeekNumOfToday);
+        mWeekViewPager.setCurrentItem(mWeekNumOfToday, false);
         // mWeekViewPager.setVisibility(View.INVISIBLE);
         mWeekViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             /**
@@ -432,7 +433,7 @@ public class OSCalendarView extends FrameLayout {
                         final int weekNum = OSTimeUtil.getWeeksSinceDate(mMinDate, mSelectedDay, mFirstDayOfWeek);
                         // if the week number is not the current focus week, need to change the week number of the week view pager. otherwise change the selected day index.
                         if (mWeekViewPager.getCurrentItem() != weekNum) {
-                            mWeekViewPager.setCurrentItem(weekNum);
+                            mWeekViewPager.setCurrentItem(weekNum, false);
                         }
                         mFocusedWeekView.setSelectedDayIndex(mSelectedDay.get(Calendar.DAY_OF_WEEK) - mFirstDayOfWeek);
                         setMonthDisplayed(mSelectedDay);
@@ -475,8 +476,8 @@ public class OSCalendarView extends FrameLayout {
         mSelectedDay.setTimeInMillis(ss.selectedDayTime);
         setMonthDisplayed(mSelectedDay);
         daySelected(mSelectedDay);
-        mMonthViewPager.setCurrentItem(OSTimeUtil.getMonthsSinceDate(mMinDate, mSelectedDay));
-        mWeekViewPager.setCurrentItem(OSTimeUtil.getWeeksSinceDate(mMinDate, mSelectedDay, mFirstDayOfWeek));
+        mMonthViewPager.setCurrentItem(OSTimeUtil.getMonthsSinceDate(mMinDate, mSelectedDay), false);
+        mWeekViewPager.setCurrentItem(OSTimeUtil.getWeeksSinceDate(mMinDate, mSelectedDay, mFirstDayOfWeek), false);
     }
 
     /**
@@ -607,7 +608,6 @@ public class OSCalendarView extends FrameLayout {
 
     protected void doScrolling(float distanceY) {
         mScrollingDistance += distanceY;
-        // OSLog.e("=======  doScrolling  ======== Distance Y:" + distanceY + "   mScrollingDistance:" + mScrollingDistance + " top:" + mMonthViewPager.getTop());
         if (mCurrentCalendarMode == CALENDAR_VIEW_MODE_MONTH) {
             if ((mCalendarMonthViewContainer.getTop() == 0 && mScrollingDistance > 0)
                     || (mCalendarMonthViewContainer.getTop() + getMaxScrollOffset() == 0
@@ -617,7 +617,6 @@ public class OSCalendarView extends FrameLayout {
                 translateCalendarView(distanceY);
             }
         } else {
-
             if (mScrollingDistance > 0 && mScrollingDistance < getMaxScrollOffset()) {
                 translateCalendarView(distanceY);
             }
@@ -924,7 +923,7 @@ public class OSCalendarView extends FrameLayout {
     }
 
     private void smoothToMonthMode() {
-        final int end = mCurrentCalendarMode == CALENDAR_VIEW_MODE_MONTH ? -mScrollingDistance : getMaxScrollOffset() - mScrollingDistance;
+        final int end = (int)(mCurrentCalendarMode == CALENDAR_VIEW_MODE_MONTH ? -mScrollingDistance : getMaxScrollOffset() - mScrollingDistance);
         mCalendarMonthViewContainer.clearAnimation();
         Animation animation = new SmoothToMonthModeAnimator(0, end, CALENDAR_VIEW_MODE_MONTH);
         mCalendarMonthViewContainer.startAnimation(animation);
@@ -932,7 +931,7 @@ public class OSCalendarView extends FrameLayout {
 
     private void smoothToWeekMode() {
         mCalendarMonthViewContainer.clearAnimation();
-        Animation animation = new SmoothToMonthModeAnimator(getMaxScrollOffset() + mScrollingDistance, 0, CALENDAR_VIEW_MODE_WEEK);
+        Animation animation = new SmoothToMonthModeAnimator((int)(getMaxScrollOffset() + mScrollingDistance), 0, CALENDAR_VIEW_MODE_WEEK);
         mCalendarMonthViewContainer.startAnimation(animation);
     }
 
@@ -989,6 +988,7 @@ public class OSCalendarView extends FrameLayout {
             }
         }
 
+        Log.e("ooooo", "+++ checkSelectDayPosition +++" + (mWeekViewPager.getVisibility() == View.VISIBLE ? "Visible" : "Invisible"));
     }
 
     public Calendar getMaxDate() {
